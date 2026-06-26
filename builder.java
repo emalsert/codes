@@ -7,18 +7,16 @@ public class Camt106XmlBuilder {
         this.mapper = mapper;
     }
 
-    public Camt106Message build(MxDto dto) {
+    public MxDto build(SwiftDto dto) {
         ChargesPaymentRequestV02 content = mapper.toChargesPaymentRequest(dto);
 
         MxCamt10600102 mx = new MxCamt10600102();
-        mx.setChargesPaymentRequest(content);
-        // mx.setAppHdr(...) seulement si la couche aval exige un BAH (head.001)
+        mx.setChrgsPmtReq(content);
 
         MxWriteConfiguration conf = new MxWriteConfiguration();
         conf.indent = true;
         conf.includeXMLDeclaration = true;
 
-        String xml = mx.message(conf);
-        return new Camt106Message(dto.getId(), xml); // adapte le getId()
+        return new MxDto(dto.getId(), mx.message(conf));
     }
 }
